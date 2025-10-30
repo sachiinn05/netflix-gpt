@@ -1,11 +1,50 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Header from './Header'
+import { checkValidData } from '../utils/validate';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../utils/firebase';
 
 const Login = () => {
   const [isSignInForm,setIsSignInFrom]=useState(true);
+  const [errorMessage,setErrorMessage]=useState(null);
+
+  const email=useRef(null);
+  const password=useRef(null);
+
+  const handleButtonClick=()=>{
+    const message=  checkValidData(email.current.value,password.current.value)
+    setErrorMessage(message);
+
+    if(message) return ;
+
+    if(!isSignInForm)
+    {
+       //SignUp Logic
+       createUserWithEmailAndPassword(auth,email.current.value,password.current.value)
+
+      .then((userCredential) => {
+       const user = userCredential.user;
+       console.log(user);
+    })
+      .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setErrorMessage(errorCode + "-" + errorMessage)
+    });
+    }
+    else
+    {
+      //SignIn Logic
+    }
+    
+    
+  }
+
+
   const toggleSignUpForm=()=>{
      setIsSignInFrom(!isSignInForm);
   }
+  
   return (
     <div>
       <Header/>
@@ -15,7 +54,7 @@ const Login = () => {
         alt="background"/>
       </div>
 
-      <form className="w-3/12 min-w-[300px] absolute p-12 bg-black/80 my-40 mx-auto right-0 left-0 text-white rounded-md">
+      <form  onSubmit={(e)=>e.preventDefault()}  className="w-3/12 min-w-[300px] absolute p-12 bg-black/80 my-40 mx-auto right-0 left-0 text-white rounded-md">
       <h1 className="font-bold text-3xl py-4">
         {isSignInForm? "Sign In" :"Sign Up"}</h1>
       { !isSignInForm && (
@@ -26,25 +65,33 @@ const Login = () => {
      />
      )}
       <input
+      ref={email}
       type="email"
       placeholder="Email or phone number"
       className="p-4 my-3 w-full bg-[#333] rounded text-white placeholder-gray-400 focus:outline-none"
       />
       <input
+      ref={password}
       type="password"
        placeholder="Password"
       className="p-4 my-3 w-full bg-[#333] rounded text-white placeholder-gray-400 focus:outline-none"
      />
 
     
+     <p className="text-[#e50914] text-sm font-medium mt-2">
+      {errorMessage}
+     </p>
 
-     <button className="p-4 my-6 bg-red-700 hover:bg-red-800 w-full rounded font-semibold">
+
+     <button className="p-4 my-6 bg-red-700 hover:bg-red-800 w-full rounded font-semibold"
+     onClick={handleButtonClick}
+     >
       {isSignInForm? "Sign In" :"Sign Up"}
      </button>
        <div className="flex justify-between text-sm text-gray-400">
   </div>
-     <p
-  className="py-4 text-gray-400 text-sm cursor-pointer transition-all duration-300 hover:underline hover:text-white"
+     <p 
+  className= "py-4 text-gray-400 text-sm cursor-pointer transition-all duration-300 hover:underline hover:text-white"
   onClick={toggleSignUpForm}
 >
   {isSignInForm
