@@ -25,7 +25,7 @@ const Header = () => {
         navigate("/error");
       });
   };
-  const handleGptSeaarchClick=()=>{
+  const handleGptSearchClick=()=>{
      dispatch(toggleGptSearchView());
   }
   const handleLanguageChange=(e)=>{
@@ -63,7 +63,7 @@ const Header = () => {
   <div className="relative flex items-center gap-4">
     <button
       className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded-lg shadow-md hover:opacity-90 transition-all duration-300"
-     onClick={handleGptSeaarchClick}
+     onClick={handleGptSearchClick}
      >
       {showGptSearch ? "HomePage":"GPT Search"}
      
