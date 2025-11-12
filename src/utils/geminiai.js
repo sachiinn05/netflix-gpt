@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai"; // ✅ FIXED import name
 
-const GEMINI_API_KEY = "AIzaSyCSuKU-O0sFmztmtn1fX0Uq90zRORbN5XE";
+const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 
 const gemini = new GoogleGenAI({
   apiKey: GEMINI_API_KEY,
